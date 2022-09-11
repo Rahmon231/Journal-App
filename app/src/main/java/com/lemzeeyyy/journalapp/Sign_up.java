@@ -24,6 +24,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.lemzeeyyy.journalapp.utils.JournalUser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,6 +106,9 @@ public class Sign_up extends AppCompatActivity {
                                                         String name = task.getResult().getString("username");
                                                         //If user is registered successfully,
                                                        // move to AddJournalActivity
+                                                        JournalUser journalUser = JournalUser.getInstance();
+                                                        journalUser.setUserid(currentUserId);
+                                                        journalUser.setUsername(name);
                                                         Intent intent = new Intent(Sign_up.this,
                                                                 AddJournalActivity.class);
                                                         intent.putExtra("username",name);
