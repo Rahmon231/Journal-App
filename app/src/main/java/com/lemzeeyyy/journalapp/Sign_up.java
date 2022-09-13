@@ -69,9 +69,9 @@ public class Sign_up extends AppCompatActivity {
             if(!TextUtils.isEmpty(email_signup.getText().toString()) &&
                     !TextUtils.isEmpty(password_signup.getText().toString())){
 
-                String email = email_signup.getText().toString();
-                String password = password_signup.getText().toString();
-                String username = username_signup.getText().toString();
+                String email = email_signup.getText().toString().trim();
+                String password = password_signup.getText().toString().trim();
+                String username = username_signup.getText().toString().trim();
 
                 createUserWithEmailAndPassword(email,password,username);
             }else {
@@ -86,6 +86,7 @@ public class Sign_up extends AppCompatActivity {
             firebaseAuth.createUserWithEmailAndPassword(email,password)
                     .addOnCompleteListener(task -> {
                         if(task.isSuccessful()){
+
                             //Take User To Add Journal Activity
 
                             currentUser = firebaseAuth.getCurrentUser();
@@ -95,40 +96,40 @@ public class Sign_up extends AppCompatActivity {
                             Map<String,String> userObj = new HashMap<>();
                             userObj.put("userId",currentUserId);
                             userObj.put("username",username);
-                            reference.add(userObj).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    documentReference.get()
-                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                    if(Objects.requireNonNull(task.getResult().exists())){
-                                                        String name = task.getResult().getString("username");
-                                                        //If user is registered successfully,
-                                                       // move to AddJournalActivity
-                                                        JournalUser journalUser = JournalUser.getInstance();
-                                                        journalUser.setUserid(currentUserId);
-                                                        journalUser.setUsername(name);
-                                                        Intent intent = new Intent(Sign_up.this,
-                                                                AddJournalActivity.class);
-                                                        intent.putExtra("username",name);
-                                                        intent.putExtra("userid",currentUserId);
-                                                        startActivity(intent);
+                            Log.d("TAGY", "onSuccess: code got here"+userObj.get("username"));
+                            reference.add(userObj)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Log.d("TAGY", "onSuccess: code got here"+userObj.get("username"));
+                                            documentReference.get()
+                                                    .addOnCompleteListener(task1 -> {
+                                                        Log.d("TAGY", "createUserWithEmailAndPassword: Code got here" + ":present");
+                                                        Log.d("TAGY", "createUserWithEmailAndPassword: " + task1.getResult().exists());
+                                                        if (Objects.requireNonNull(task1.getResult().exists())) {
+                                                            String name = task1.getResult().getString("username");
+                                                            Log.d("TAGY", "createUserWithEmailAndPassword: " + name);
+                                                            //If user is registered successfully,
+                                                            // move to AddJournalActivity
+                                                            JournalUser journalUser = JournalUser.getInstance();
+                                                            journalUser.setUserid(currentUserId);
+                                                            journalUser.setUsername(name);
+                                                            Intent intent = new Intent(Sign_up.this,
+                                                                    AddJournalActivity.class);
+                                                            intent.putExtra("username", name);
+                                                            intent.putExtra("userid", currentUserId);
+                                                            Sign_up.this.startActivity(intent);
 
-                                                    }
-                                                }
-                                            });
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("TAG", "createUserWithEmailAndPassword: "+e.getMessage());
-                                }
-                            });
+                                                        }
+                                                    }).addOnFailureListener(e ->
+                                                            Log.d("TAGY", "createUserWithEmailAndPassword: "+e.getMessage()));
+                                        }
+                                    }).addOnFailureListener(e ->
+                                            Log.d("TAGY", "createUserWithEmailAndPassword: "+e.getMessage()));
                         }
 
                     }).addOnFailureListener(e -> {
-                        Log.d("TAG", "createUserWithEmailAndPassword: "+e.getMessage());
+                        Log.d("TAGY", "createUserWithEmailAndPassword: "+e.getMessage());
                     });
         }
     }
