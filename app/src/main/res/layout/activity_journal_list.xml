@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:text="No Post"
         android:textSize="24sp"
+        android:visibility="invisible"
         android:id="@+id/list_no_post"
         app:layout_constraintBottom_toBottomOf="@id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
