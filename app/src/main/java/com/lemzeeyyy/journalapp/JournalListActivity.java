@@ -11,12 +11,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.lemzeeyyy.journalapp.model.Journal;
+import com.lemzeeyyy.journalapp.utils.JournalUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,5 +86,23 @@ public class JournalListActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        collectionReference.whereEqualTo("userId", JournalUser.getInstance().getUserid())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(!queryDocumentSnapshots.isEmpty()){
+                            for(QueryDocumentSnapshot journals : queryDocumentSnapshots){
+                                Journal journal = journals.toObject(Journal.class);
+                                journalList.add(journal);
+
+                            }
+                        }
+                    }
+                })
     }
 }
