@@ -85,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
                                                     journalUser.setUsername(snapshot.getString("username"));
                                                     journalUser.setUserid(snapshot.getString("userId"));
                                                     //go to listActivity after successful login
-                                                    startActivity(new Intent(MainActivity.this,AddJournalActivity.class));
+                                                    startActivity(new Intent(MainActivity.this,
+                                                            JournalListActivity.class));
                                                 }
                                             }
                                         }

@@ -9,8 +9,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -103,8 +106,19 @@ public class JournalListActivity extends AppCompatActivity {
                                 journalList.add(journal);
 
                             }
+                            JournalListAdapter journalListAdapter = new JournalListAdapter(getApplicationContext(),journalList);
+                            recyclerView.setAdapter(journalListAdapter);
+                            journalListAdapter.notifyDataSetChanged();
+                        }else {
+                            noPostTV.setVisibility(View.VISIBLE);
                         }
+
                     }
-                })
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(JournalListActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
