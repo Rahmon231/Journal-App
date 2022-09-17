@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
+import com.lemzeeyyy.journalapp.adapter.JournalListAdapter;
 import com.lemzeeyyy.journalapp.model.Journal;
 import com.lemzeeyyy.journalapp.utils.JournalUser;
 
@@ -35,6 +36,7 @@ public class JournalListActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private List<Journal> journalList;
     private CollectionReference collectionReference = database.collection("Journal");
+    private JournalListAdapter journalListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
